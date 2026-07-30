@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CLI_ENTRY="$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || realpath "${BASH_SOURCE[0]}")"
+CLI_DIR="$(cd "$(dirname "$CLI_ENTRY")/.." && pwd)"
 ROOT="${XPANEL_ROOT:-}"
 COMMAND="help"
 ARGS=()

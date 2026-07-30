@@ -13,7 +13,12 @@ VERSION="test"
 XPANEL_FILE_LANGUAGE="es"
 EOF
 
-output="$(cd "$TEMP_ROOT" && XPANEL_DEFAULT_ROOT="$TEMP_ROOT/product" "$ROOT/bin/xpanel" status)"
+cli_command="$ROOT/bin/xpanel"
+if [[ "$(uname -s)" == "Linux" ]]; then
+  ln -s "$ROOT/bin/xpanel" "$TEMP_ROOT/xpanel"
+  cli_command="$TEMP_ROOT/xpanel"
+fi
+output="$(cd "$TEMP_ROOT" && XPANEL_DEFAULT_ROOT="$TEMP_ROOT/product" "$cli_command" status)"
 grep -q 'xpanel-host' <<< "$output"
 grep -q "$TEMP_ROOT/product" <<< "$output"
 
