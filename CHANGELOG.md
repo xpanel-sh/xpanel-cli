@@ -6,6 +6,7 @@ Los cambios importantes de XPanel CLI se documentarán aquí. El formato sigue [
 
 - El comando global detecta automáticamente Host, Core o Pod bajo `/opt` aunque se ejecute desde otro directorio.
 - Las operaciones privilegiadas se elevan internamente, por lo que el usuario ejecuta `xpanel update` sin anteponer `sudo`.
+- Los ejecutables se versionan con su modo correcto para que la instalación no deje cambios locales que bloqueen actualizaciones.
 
 ### Añadido
 
