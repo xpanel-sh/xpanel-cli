@@ -20,6 +20,7 @@ git_seed() {
 cli_seed="$TEMP_ROOT/cli-seed"
 mkdir -p "$cli_seed"
 cp -R "$CLI_SOURCE/." "$cli_seed/"
+rm -rf -- "$cli_seed/.git"
 git_seed "$cli_seed"
 git clone -q --bare "$cli_seed" "$TEMP_ROOT/cli.git"
 git clone -q --branch stable "$TEMP_ROOT/cli.git" "$TEMP_ROOT/xpanel-cli"

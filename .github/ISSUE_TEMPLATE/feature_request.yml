@@ -1,0 +1,33 @@
+name: Proponer una mejora
+description: Sugiere una capacidad o mejora para XPanel CLI
+title: "[Mejora]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema que deseas resolver
+      description: Describe el caso de uso antes de proponer la solución.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propuesta
+      description: Incluye ejemplos de comandos si ayudan a explicar el flujo.
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibilidad
+      description: Indica los productos XPanel y distribuciones Linux afectados.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Comprobaciones
+      options:
+        - label: La propuesta conserva la independencia entre productos.
+          required: true
+        - label: Busqué propuestas existentes sobre este tema.
+          required: true
