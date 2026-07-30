@@ -31,6 +31,7 @@ chmod +x "$INSTALL_DIR/bin/xpanel"
 find "$INSTALL_DIR/commands" -type f -name "*.sh" -exec chmod +x {} \;
 
 ln -sf "$INSTALL_DIR/bin/xpanel" "$BIN_DIR/xpanel"
+[[ -x "$BIN_DIR/xpanel" ]] || { echo "Could not install the global xpanel command." >&2; exit 1; }
 
 echo "xpanel CLI installed at $INSTALL_DIR"
 echo "Global command: $BIN_DIR/xpanel"

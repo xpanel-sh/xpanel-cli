@@ -149,14 +149,13 @@ La CLI no debe actualizar todos los productos del ecosistema desde una sola inst
 Por seguridad la operación se detiene si la CLI o el producto tienen cambios locales rastreados por Git. En producción se recomienda ejecutarla desde la raíz del producto y con privilegios administrativos:
 
 ```bash
-cd /opt/xpanel-host
-sudo xpanel update
+xpanel update
 ```
 
 Desde otra ubicación puede indicarse el producto explícitamente:
 
 ```bash
-sudo xpanel update --root=/opt/xpanel-host
+xpanel update --root=/opt/xpanel-host
 ```
 
 ---

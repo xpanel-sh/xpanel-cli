@@ -2,9 +2,10 @@
 set -euo pipefail
 
 CLI_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ROOT="$(pwd)"
+ROOT="${XPANEL_ROOT:-}"
 COMMAND="help"
 ARGS=()
+ORIGINAL_ARGS=("$@")
 
 for ARG in "$@"; do
   case "$ARG" in
@@ -21,7 +22,36 @@ for ARG in "$@"; do
   esac
 done
 
+is_product_root() {
+  [[ -f "$1/xpanel" || -f "$1/scripts/xpanel-system.sh" || -f "$1/artisan" || -f "$1/go.mod" ]]
+}
+
+if [[ -z "$ROOT" ]]; then
+  current_root="$(pwd)"
+  if is_product_root "$current_root"; then
+    ROOT="$current_root"
+  elif [[ -n "${XPANEL_DEFAULT_ROOT:-}" ]] && is_product_root "$XPANEL_DEFAULT_ROOT"; then
+    ROOT="$XPANEL_DEFAULT_ROOT"
+  else
+    for candidate in /opt/xpanel-host /opt/xpanel-core /opt/xpanel-pod; do
+      if is_product_root "$candidate"; then
+        ROOT="$candidate"
+        break
+      fi
+    done
+  fi
+fi
+ROOT="${ROOT:-$(pwd)}"
 ROOT="$(cd "$ROOT" 2>/dev/null && pwd || printf '%s' "$ROOT")"
+
+case "$COMMAND" in
+  update|uninstall|serve)
+    if [[ "$(uname -s)" == "Linux" && "$(id -u)" != "0" ]]; then
+      command -v sudo >/dev/null 2>&1 || { echo "sudo is required for $COMMAND." >&2; exit 1; }
+      exec sudo -- "$0" "${ORIGINAL_ARGS[@]}"
+    fi
+    ;;
+esac
 
 export XPANEL_CLI_DIR="$CLI_DIR"
 export XPANEL_ROOT="$ROOT"
@@ -45,4 +75,3 @@ if [[ ! -f "$COMMAND_FILE" ]]; then
 fi
 
 exec "$COMMAND_FILE" "${ARGS[@]}"
-
