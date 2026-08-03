@@ -29,7 +29,10 @@ fi
 update_repository "$XPANEL_ROOT" "$XPANEL_SYSTEM"
 
 if [[ -f "$XPANEL_ROOT/scripts/xpanel-update.sh" ]]; then
-  bash "$XPANEL_ROOT/scripts/xpanel-update.sh"
+  (
+    cd "$XPANEL_ROOT"
+    bash "$XPANEL_ROOT/scripts/xpanel-update.sh"
+  )
 fi
 
 echo "$(xpanel_t update_complete system="$XPANEL_SYSTEM")"
