@@ -156,6 +156,22 @@ Por seguridad la operación se detiene si la CLI o el producto tienen cambios lo
 xpanel update
 ```
 
+Para una instalación administrada donde esos cambios sean accidentales —por ejemplo, permisos de ejecución modificados por una versión anterior del instalador— puede forzarse la actualización:
+
+```bash
+xpanel update --force
+```
+
+Antes de restaurar el contenido rastreado, la CLI guarda un parche binario y el estado de Git en `/var/backups/xpanel/updates/<fecha>-<proceso>/`. Los archivos no rastreados nunca se eliminan. `--discard-local-changes` es un alias explícito de `--force`.
+
+Para inspeccionar primero la causa:
+
+```bash
+git -C /opt/xpanel-cli status --short
+git -C /opt/xpanel-cli diff --summary
+git -C /opt/xpanel-cli diff
+```
+
 Desde otra ubicación puede indicarse el producto explícitamente:
 
 ```bash

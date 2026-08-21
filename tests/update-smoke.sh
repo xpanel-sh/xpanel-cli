@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 CLI_SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TEMP_ROOT="$(mktemp -d)"
+git -C "$CLI_SOURCE" ls-files --stage commands/instances.sh | grep -q '^100755 '
 cleanup() {
   rm -rf -- "$TEMP_ROOT"
 }
@@ -54,5 +55,19 @@ if XPANEL_BIN_DIR="$TEMP_ROOT/bin" \
   echo "Update should refuse a product with tracked local changes." >&2
   exit 1
 fi
+
+printf 'keep me\n' > "$TEMP_ROOT/xpanel-host/untracked.txt"
+XPANEL_BIN_DIR="$TEMP_ROOT/bin" \
+XPANEL_UPDATE_BACKUP_ROOT="$TEMP_ROOT/update-backups" \
+  "$TEMP_ROOT/xpanel-cli/bin/xpanel" update --force --root="$TEMP_ROOT/xpanel-host" >/dev/null
+test -f "$TEMP_ROOT/xpanel-host/update-ran"
+test -f "$TEMP_ROOT/xpanel-host/untracked.txt"
+if grep -q '# local change' "$TEMP_ROOT/xpanel-host/xpanel"; then
+  echo "Forced update did not restore tracked product files." >&2
+  exit 1
+fi
+patch="$(find "$TEMP_ROOT/update-backups" -type f -name 'xpanel-host.patch' -print -quit)"
+test -n "$patch"
+grep -q '# local change' "$patch"
 
 echo "xpanel update smoke test passed."
