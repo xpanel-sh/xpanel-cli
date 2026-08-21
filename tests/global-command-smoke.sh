@@ -23,3 +23,10 @@ grep -q 'xpanel-host' <<< "$output"
 grep -q "$TEMP_ROOT/product" <<< "$output"
 
 echo "xpanel global command smoke test passed."
+
+mkdir -p "$TEMP_ROOT/vps/scripts"
+touch "$TEMP_ROOT/vps/artisan" "$TEMP_ROOT/vps/scripts/xpanel-vps-install.sh"
+vps_output="$(XPANEL_ROOT="$TEMP_ROOT/vps" "$cli_command" status)"
+grep -q 'xpanel-vps' <<< "$vps_output"
+
+echo "xpanel VPS detection smoke test passed."

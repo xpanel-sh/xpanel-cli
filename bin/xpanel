@@ -34,7 +34,7 @@ if [[ -z "$ROOT" ]]; then
   elif [[ -n "${XPANEL_DEFAULT_ROOT:-}" ]] && is_product_root "$XPANEL_DEFAULT_ROOT"; then
     ROOT="$XPANEL_DEFAULT_ROOT"
   else
-    for candidate in /opt/xpanel-host /opt/xpanel-core /opt/xpanel-pod; do
+    for candidate in /opt/xpanel-vps /opt/xpanel-host /opt/xpanel-vm /opt/xpanel-pod; do
       if is_product_root "$candidate"; then
         ROOT="$candidate"
         break
@@ -46,7 +46,7 @@ ROOT="${ROOT:-$(pwd)}"
 ROOT="$(cd "$ROOT" 2>/dev/null && pwd || printf '%s' "$ROOT")"
 
 case "$COMMAND" in
-  update|uninstall|serve)
+  update|uninstall|serve|instances)
     if [[ "$(uname -s)" == "Linux" && "$(id -u)" != "0" ]]; then
       command -v sudo >/dev/null 2>&1 || { echo "sudo is required for $COMMAND." >&2; exit 1; }
       exec sudo -- "$0" "${ORIGINAL_ARGS[@]}"

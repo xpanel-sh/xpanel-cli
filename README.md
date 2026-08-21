@@ -31,13 +31,13 @@ La CLI está escrita en Bash para Linux. El comando global siempre se llama:
 xpanel
 ```
 
-`xpanel-cli` es código compartido de consola. No convierte Core, Host y Pod en un único sistema ni crea una dependencia entre ellos.
+`xpanel-cli` es código compartido de consola. No convierte VM, Host y Pod en un único sistema ni crea una dependencia entre ellos.
 
 ## Principios
 
 - **Un comando:** todos los productos utilizan `xpanel`.
 - **Contexto local:** cada ejecución actúa únicamente sobre la raíz seleccionada.
-- **Productos independientes:** Host y Pod funcionan sin Core.
+- **Productos independientes:** Host y Pod funcionan sin VM.
 - **Actualizaciones seguras:** Git debe estar limpio y solo se aceptan avances `fast-forward`.
 - **Extensible:** cada producto aporta sus propios scripts de operación.
 
@@ -47,11 +47,14 @@ xpanel
 
 | Sistema detectado | Qué controla |
 | --- | --- |
-| `xpanel-core` | Infraestructura, planes y MicroVMs del proveedor |
+| `xpanel-vm` | Infraestructura, planes y MicroVMs del proveedor |
 | `xpanel-host` | Hosting instalado en VPS, VDS, dedicado o MicroVM |
 | `xpanel-pod` | Contenedores instalados en VPS, VDS, dedicado o MicroVM |
+| `xpanel-vps` | Plataforma multi-tenant con tienda, WHM y panel cliente |
 
-`xpanel-vps` queda fuera del alcance actual hasta que se defina su modelo definitivo.
+`xpanel-vps` utiliza la misma CLI común, pero conserva su instalación, datos y scripts de operación propios.
+
+En XPanel VPS, `xpanel instances` lista las instancias aisladas de Host. También admite `create <tenant-id> --domain=panel.cliente.com --password-stdin`, `apply <uuid>`, `suspend <uuid>` y `resume <uuid>`.
 
 ---
 
@@ -60,12 +63,13 @@ xpanel
 Cada instalación combina un producto con la CLI:
 
 ```text
-xpanel-core + xpanel-cli
+xpanel-vm + xpanel-cli
 xpanel-host + xpanel-cli
 xpanel-pod  + xpanel-cli
+xpanel-vps  + xpanel-cli
 ```
 
-La CLI ejecuta comandos dentro del contexto local. No necesita que Core esté instalado para controlar Host o Pod.
+La CLI ejecuta comandos dentro del contexto local. No necesita que VM esté instalado para controlar Host o Pod.
 
 ---
 
@@ -126,7 +130,7 @@ El instalador crea el comando global:
 /usr/local/bin/xpanel
 ```
 
-Normalmente el `install.sh` de Core, Host o Pod realiza este paso automáticamente. `get.xpanel.sh` también termina usando los instaladores oficiales de cada repositorio.
+Normalmente el `install.sh` de VM, Host o Pod realiza este paso automáticamente. `get.xpanel.sh` también termina usando los instaladores oficiales de cada repositorio.
 
 ---
 

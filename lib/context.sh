@@ -26,12 +26,12 @@ xpanel_load_context() {
   XPANEL_LANGUAGE="${XPANEL_FILE_LANGUAGE:-$XPANEL_LANGUAGE}"
 
   if [[ "$XPANEL_SYSTEM" == "unknown" ]]; then
-    if [[ -f "$XPANEL_ROOT/artisan" ]]; then
-      XPANEL_SYSTEM="xpanel-host"
-    elif [[ -f "$XPANEL_ROOT/go.mod" ]] && grep -q "xpanel-core" "$XPANEL_ROOT/go.mod"; then
-      XPANEL_SYSTEM="xpanel-core"
-    elif [[ -f "$XPANEL_ROOT/scripts/install-vps.sh" ]]; then
+    if [[ -f "$XPANEL_ROOT/scripts/install-vps.sh" ]] || [[ -f "$XPANEL_ROOT/scripts/xpanel-vps-install.sh" ]]; then
       XPANEL_SYSTEM="xpanel-vps"
+    elif [[ -f "$XPANEL_ROOT/artisan" ]]; then
+      XPANEL_SYSTEM="xpanel-host"
+    elif [[ -f "$XPANEL_ROOT/go.mod" ]] && grep -q "xpanel-vm" "$XPANEL_ROOT/go.mod"; then
+      XPANEL_SYSTEM="xpanel-vm"
     fi
   fi
 
