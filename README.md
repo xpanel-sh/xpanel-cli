@@ -81,6 +81,7 @@ xpanel version
 xpanel status
 xpanel git
 xpanel update
+xpanel repair
 xpanel uninstall
 ```
 
@@ -137,6 +138,8 @@ Normalmente el `install.sh` de VM, Host o Pod realiza este paso automáticamente
 ## Actualizaciones
 
 `xpanel update` actualiza primero el repositorio de la propia CLI, reinstala su enlace global, actualiza el repositorio del producto activo y después ejecuta el proceso específico del producto cuando existe. Utiliza la rama remota configurada en cada clon; no presupone que siempre se llame `main`.
+
+`xpanel repair` instala primero la revisión más reciente y solicita al producto una reconciliación completa de servicios, permisos y configuración. Equivale a `xpanel update --repair`; `--force` sigue significando únicamente respaldar y descartar cambios locales rastreados.
 
 ```text
 CLI detecta xpanel-host

@@ -38,6 +38,7 @@ cat > "$product_seed/scripts/xpanel-update.sh" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 touch "$XPANEL_ROOT/update-ran"
+printf '%s\n' "${XPANEL_UPDATE_MODE:-missing}" > "$XPANEL_ROOT/update-mode"
 EOF
 chmod +x "$product_seed/scripts/xpanel-update.sh"
 git_seed "$product_seed"
@@ -48,6 +49,11 @@ XPANEL_BIN_DIR="$TEMP_ROOT/bin" \
   "$TEMP_ROOT/xpanel-cli/bin/xpanel" update --root="$TEMP_ROOT/xpanel-host" >/dev/null
 test -e "$TEMP_ROOT/bin/xpanel"
 test -f "$TEMP_ROOT/xpanel-host/update-ran"
+grep -qx update "$TEMP_ROOT/xpanel-host/update-mode"
+
+XPANEL_BIN_DIR="$TEMP_ROOT/bin" \
+  "$TEMP_ROOT/xpanel-cli/bin/xpanel" repair --root="$TEMP_ROOT/xpanel-host" >/dev/null
+grep -qx repair "$TEMP_ROOT/xpanel-host/update-mode"
 
 printf '\n# local change\n' >> "$TEMP_ROOT/xpanel-host/xpanel"
 if XPANEL_BIN_DIR="$TEMP_ROOT/bin" \

@@ -9,6 +9,7 @@ declare -gA XPANEL_I18N=(
   [cmd_language]="Muestra o cambia el idioma"
   [cmd_git]="Muestra el estado de Git"
   [cmd_update]="Actualiza el sistema"
+  [cmd_repair]="Actualiza y reconcilia toda la configuracion del servidor"
   [cmd_serve]="Ejecuta el servidor local"
   [cmd_uninstall]="Muestra aviso de desinstalacion"
   [unknown_command]="Comando desconocido: :command"

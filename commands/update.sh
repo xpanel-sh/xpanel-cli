@@ -4,10 +4,14 @@ set -euo pipefail
 source "$XPANEL_CLI_DIR/lib/context.sh"
 
 FORCE_UPDATE=false
+REPAIR_UPDATE=false
 for argument in "$@"; do
   case "$argument" in
     --force|--discard-local-changes)
       FORCE_UPDATE=true
+      ;;
+    --repair)
+      REPAIR_UPDATE=true
       ;;
     *)
       echo "$(xpanel_t update_unknown_option option="$argument")" >&2
@@ -71,6 +75,11 @@ update_repository "$XPANEL_ROOT" "$XPANEL_SYSTEM"
 if [[ -f "$XPANEL_ROOT/scripts/xpanel-update.sh" ]]; then
   (
     cd "$XPANEL_ROOT"
+    if [[ "$REPAIR_UPDATE" == "true" ]]; then
+      export XPANEL_UPDATE_MODE=repair
+    else
+      export XPANEL_UPDATE_MODE=update
+    fi
     bash "$XPANEL_ROOT/scripts/xpanel-update.sh"
   )
 fi

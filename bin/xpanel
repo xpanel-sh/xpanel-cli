@@ -46,7 +46,7 @@ ROOT="${ROOT:-$(pwd)}"
 ROOT="$(cd "$ROOT" 2>/dev/null && pwd || printf '%s' "$ROOT")"
 
 case "$COMMAND" in
-  update|uninstall|serve|instances)
+  update|repair|uninstall|serve|instances)
     if [[ "$(uname -s)" == "Linux" && "$(id -u)" != "0" ]]; then
       command -v sudo >/dev/null 2>&1 || { echo "sudo is required for $COMMAND." >&2; exit 1; }
       exec sudo -- "$0" "${ORIGINAL_ARGS[@]}"
@@ -65,6 +65,10 @@ COMMAND_FILE="$CLI_DIR/commands/$COMMAND.sh"
 case "$COMMAND" in
   -h|--help)
     COMMAND_FILE="$CLI_DIR/commands/help.sh"
+    ;;
+  repair)
+    COMMAND_FILE="$CLI_DIR/commands/update.sh"
+    ARGS=(--repair "${ARGS[@]}")
     ;;
 esac
 
