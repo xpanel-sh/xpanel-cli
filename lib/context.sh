@@ -25,6 +25,17 @@ xpanel_load_context() {
   XPANEL_VERSION="${VERSION:-$XPANEL_VERSION}"
   XPANEL_LANGUAGE="${XPANEL_FILE_LANGUAGE:-$XPANEL_LANGUAGE}"
 
+  local language_file=""
+  case "$XPANEL_SYSTEM" in
+    xpanel-vps) language_file=/var/lib/xpanel-vps/language ;;
+    xpanel-host) language_file=/var/lib/xpanel-host/language ;;
+  esac
+  if [[ -n "$language_file" && -f "$language_file" && ! -L "$language_file" ]]; then
+    local saved_language
+    saved_language="$(tr -d '\r\n' < "$language_file")"
+    [[ "$saved_language" == es || "$saved_language" == en ]] && XPANEL_LANGUAGE="$saved_language"
+  fi
+
   if [[ "$XPANEL_SYSTEM" == "unknown" ]]; then
     if [[ -f "$XPANEL_ROOT/scripts/install-vps.sh" ]] || [[ -f "$XPANEL_ROOT/scripts/xpanel-vps-install.sh" ]]; then
       XPANEL_SYSTEM="xpanel-vps"
@@ -69,7 +80,16 @@ xpanel_load_language() {
 
 xpanel_save_language() {
   local new_language="$1"
-  xpanel_write_marker "$XPANEL_SYSTEM" "$XPANEL_REPO" "$XPANEL_VERSION" "$new_language"
+  local state_dir
+  case "$XPANEL_SYSTEM" in
+    xpanel-vps) state_dir=/var/lib/xpanel-vps ;;
+    xpanel-host) state_dir=/var/lib/xpanel-host ;;
+    *) xpanel_write_marker "$XPANEL_SYSTEM" "$XPANEL_REPO" "$XPANEL_VERSION" "$new_language"; return ;;
+  esac
+  [[ ! -L "$state_dir" && ! -L "$state_dir/language" ]] || return 1
+  install -d -o root -g root -m 0755 "$state_dir"
+  printf '%s\n' "$new_language" > "$state_dir/language"
+  chmod 0644 "$state_dir/language"
 }
 
 xpanel_write_marker() {

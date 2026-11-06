@@ -4,6 +4,7 @@ Los cambios importantes de XPanel CLI se documentarán aquí. El formato sigue [
 
 ## [Sin publicar]
 
+- El idioma elegido se guarda en el estado de cada producto bajo `/var/lib`, sin modificar el marcador rastreado del repositorio ni bloquear la actualización siguiente.
 - `xpanel update` ejecuta la actualización incremental del producto y el nuevo `xpanel repair` conserva la reconciliación completa para administradores. `xpanel update --repair` queda disponible como alias explícito y puede combinarse con `--force`.
 
 ## [0.1.0-alpha.2] - Hito de desarrollo retrospectivo
